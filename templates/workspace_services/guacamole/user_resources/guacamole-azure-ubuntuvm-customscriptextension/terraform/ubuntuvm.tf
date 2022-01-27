@@ -42,9 +42,6 @@ resource "azurerm_linux_virtual_machine" "ubuntuvm" {
   delete_os_disk_on_termination    = false
   delete_data_disks_on_termination = false
 
-#if cloud-init
-  custom_data = data.cloudinit.config.rendered
-
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -97,16 +94,4 @@ resource "azurerm_key_vault_secret" "ubuntuvm_password" {
         "commandToExecute": "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install ubuntu-gnome-desktop -yq && sudo apt-get install xrdp -y && sudo adduser xrdp ssl-cert && sudo systemctl enable xrdp && sudo reboot" 
     }
 SETTINGS
-}
-
-#if cloud-init
-data "cloudinit" "config" {
-  gzip          = true
-  base64_encode = true
-
-  # Main cloud-config configuration file.
-  part {
-    content_type = "text/x-shellscript"
-    content      = "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install ubuntu-gnome-desktop -yq && sudo apt-get install xrdp -y && sudo adduser xrdp ssl-cert && sudo systemctl enable xrdp && sudo reboot"
-  }
 }

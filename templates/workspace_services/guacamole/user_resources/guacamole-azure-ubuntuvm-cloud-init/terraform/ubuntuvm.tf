@@ -33,7 +33,7 @@ resource "random_password" "password" {
   override_special = "_%@"
 }
 
-resource "azurerm_windows_virtual_machine" "win10vm" {
+resource "azurerm_linux_virtual_machine" "ubuntuvm" {
   name                             = local.vm_name
   location                         = data.azurerm_resource_group.ws.location
   resource_group_name              = data.azurerm_resource_group.ws.name
@@ -42,10 +42,12 @@ resource "azurerm_windows_virtual_machine" "win10vm" {
   delete_os_disk_on_termination    = false
   delete_data_disks_on_termination = false
 
+  custom_data = data.cloudinit.config.rendered
+
   storage_image_reference {
-    publisher = "MicrosoftWindowsDesktop"
-    offer     = "windows-10"
-    sku       = "20h2-pro-g2"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "20_04-lts-gen2"
     version   = "latest"
   }
 
@@ -62,7 +64,8 @@ resource "azurerm_windows_virtual_machine" "win10vm" {
     admin_password = random_password.password.result
   }
 
-  os_profile_windows_config {
+  os_profile_linux_config {
+    disable_password_authentication = false
   }
 
   identity {
@@ -74,8 +77,19 @@ resource "azurerm_windows_virtual_machine" "win10vm" {
   }
 }
 
-resource "azurerm_key_vault_secret" "win10vm_password" {
+resource "azurerm_key_vault_secret" "ubuntuvm_password" {
   name         = "${local.vm_name}-admin-credentials"
   value        = "${random_string.username.result}\n${random_password.password.result}"
   key_vault_id = data.azurerm_key_vault.ws.id
+}
+
+data "cloudinit" "config" {
+  gzip          = true
+  base64_encode = true
+
+  # Main cloud-config configuration file.
+  part {
+    content_type = "text/x-shellscript"
+    content      = "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install ubuntu-gnome-desktop -yq && sudo apt-get install xrdp -y && sudo adduser xrdp ssl-cert && sudo systemctl enable xrdp && sudo reboot"
+  }
 }
