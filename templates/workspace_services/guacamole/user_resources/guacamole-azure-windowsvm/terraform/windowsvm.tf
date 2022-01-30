@@ -33,7 +33,7 @@ resource "random_password" "password" {
   override_special = "_%@"
 }
 
-resource "azurerm_virtual_machine" "windowsvm" {
+resource "azurerm_windows_virtual_machine" "windowsvm" {
   name                             = local.vm_name
   location                         = data.azurerm_resource_group.ws.location
   resource_group_name              = data.azurerm_resource_group.ws.name
