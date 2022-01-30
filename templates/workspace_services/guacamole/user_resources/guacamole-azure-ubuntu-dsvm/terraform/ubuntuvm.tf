@@ -45,7 +45,7 @@ resource "azurerm_linux_virtual_machine" "ubuntudsvm" {
   custom_data = data.cloudinit.config.rendered
 
   storage_image_reference {
-    publisher = "microsoft-dsvm""
+    publisher = "microsoft-dsvm"
     offer     = "ubuntu-1804"
     sku       = "1804-gen2"
     version   = "latest"
