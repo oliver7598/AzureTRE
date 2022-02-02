@@ -89,6 +89,21 @@ if [[ ${STATUS_CODE} == 404 ]]
 fi
 
 #Check if the repo already exists
+echo "Checking for ubuntu packages repo..."
+export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu-packages-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
+
+if [[ ${STATUS_CODE} == 404 ]]
+ then
+    echo "Creating ubuntu security repo..."
+    # Let's create ubuntu security library proxy
+    curl -iu admin:$NEXUS_PASS -XPOST \
+    $NEXUS_URL/service/rest/v1/repositories/apt/proxy \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '@./scripts/ubuntu_packages_proxy_conf.json'
+fi
+
+#Check if the repo already exists
 echo "Checking for pypi repo..."
 export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/pypi-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
 
