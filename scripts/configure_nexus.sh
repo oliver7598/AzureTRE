@@ -94,8 +94,8 @@ export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/r
 
 if [[ ${STATUS_CODE} == 404 ]]
  then
-    echo "Creating ubuntu security repo..."
-    # Let's create ubuntu security library proxy
+    echo "Creating ubuntu packages repo..."
+    # Let's create ubuntu packages library proxy
     curl -iu admin:$NEXUS_PASS -XPOST \
     $NEXUS_URL/service/rest/v1/repositories/apt/proxy \
     -H 'accept: application/json' \
