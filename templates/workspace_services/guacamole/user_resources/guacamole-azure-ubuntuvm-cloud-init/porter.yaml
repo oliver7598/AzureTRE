@@ -1,5 +1,5 @@
 name: tre-service-guacamole-ubuntuvm-cloud-init
-version: 0.1.7
+version: 0.1.10
 description: "An Azure TRE User Resource Template for Guacamole (Ubuntu)"
 registry: azuretre
 dockerfile: Dockerfile.tmpl
