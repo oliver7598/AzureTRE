@@ -90,7 +90,7 @@ fi
 
 #Check if the repo already exists
 echo "Checking for ubuntu packages repo..."
-export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu-packages-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
+export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu-package-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
 
 if [[ ${STATUS_CODE} == 404 ]]
  then
