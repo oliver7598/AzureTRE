@@ -60,11 +60,11 @@ fi
 
 #Check if the repo already exists
 echo "Checking for ubuntu repo..."
-export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu_proxy_repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
+export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
 
 if [[ ${STATUS_CODE} == 404 ]]
  then
-    echo "Creating ubuntu repo..."
+    echo "Creating ubuntu security repo..."
     # Let's create ubuntu library proxy
     curl -iu admin:$NEXUS_PASS -XPOST \
     $NEXUS_URL/service/rest/v1/repositories/apt/proxy \
@@ -75,7 +75,7 @@ fi
 
 #Check if the repo already exists
 echo "Checking for ubuntu security repo..."
-export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu_security_proxy_repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
+export STATUS_CODE=$(curl -iu admin:$NEXUS_PASS -X "GET" "${NEXUS_URL}/service/rest/v1/repositories/apt/proxy/ubuntu-security-proxy-repo" -H "accept: application/json" -k -s -w "%{http_code}" -o /dev/null)
 
 if [[ ${STATUS_CODE} == 404 ]]
  then
