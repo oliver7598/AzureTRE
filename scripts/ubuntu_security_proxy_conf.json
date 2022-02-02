@@ -7,7 +7,7 @@
         "write_policy": "ALLOW"
     },
     "proxy": {
-        "remoteUrl": "http://security.ubuntu.com/ubuntu/",
+        "remoteUrl": "http://security.ubuntu.com/ubuntu",
         "contentMaxAge": 1440,
         "metadataMaxAge": 1440
     },
