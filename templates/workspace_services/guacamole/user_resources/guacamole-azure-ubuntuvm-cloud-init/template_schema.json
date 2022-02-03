@@ -7,5 +7,15 @@
     "required": [
     ],
     "properties": {
+      "os_image": {
+        "$id": "#/properties/os_image",
+        "type": "string",
+        "title": "Ubuntu image",
+        "description": "Select Ubuntu image to use for VM",
+        "enum": [
+          "Ubuntu 18.04",
+          "Ubuntu 18.04 Data Science VM"
+        ]
+      }
     }
 }

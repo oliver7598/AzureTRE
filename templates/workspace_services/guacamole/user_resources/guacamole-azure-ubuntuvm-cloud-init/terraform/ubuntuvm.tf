@@ -46,10 +46,10 @@ resource "azurerm_linux_virtual_machine" "ubuntuvm" {
   custom_data = data.template_cloudinit_config.config.rendered
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18_04-lts-gen2"
-    version   = "latest"
+    publisher = local.image_ref[var.image].publisher
+    offer     = local.image_ref[var.image].offer
+    sku       = local.image_ref[var.image].sku
+    version   = local.image_ref[var.image].version
   }
 
   os_disk {
