@@ -15,7 +15,7 @@ locals {
       "sku"       = "18_04-lts-gen2"
       "version"   = "latest"
     },
-    "Server 2019 Data Science VM" = {
+    "Ubuntu 18.04 Data Science VM" = {
       "publisher" = "microsoft-dsvm"
       "offer"     = "ubuntu-1804"
       "sku"       = "1804-gen2"
