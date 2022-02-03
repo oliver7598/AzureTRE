@@ -38,32 +38,24 @@ resource "azurerm_linux_virtual_machine" "ubuntuvm" {
   location                         = data.azurerm_resource_group.ws.location
   resource_group_name              = data.azurerm_resource_group.ws.name
   network_interface_ids            = [azurerm_network_interface.internal.id]
-  vm_size                          = "Standard_DS1_v2"
-  delete_os_disk_on_termination    = false
-  delete_data_disks_on_termination = false
+  size                          = "Standard_DS1_v2"
+  disable_password_authentication = false
+  computer_name  = local.vm_name
+  admin_username = random_string.username.result
+  admin_password = random_password.password.result
+  custom_data = data.template_cloudinit_config.config.rendered
 
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "20_04-lts-gen2"
-    version   = "latest"
+  source_image_reference {
+    publisher = local.image_ref[var.image].publisher
+    offer     = local.image_ref[var.image].offer
+    sku       = local.image_ref[var.image].sku
+    version   = local.image_ref[var.image].version
   }
 
-  storage_os_disk {
+  os_disk {
     name              = "osdisk-${local.vm_name}"
     caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-
-  os_profile {
-    computer_name  = local.vm_name
-    admin_username = random_string.username.result
-    admin_password = random_password.password.result
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
+    storage_account_type  = "Standard_LRS"
   }
 
   identity {
@@ -81,8 +73,22 @@ resource "azurerm_key_vault_secret" "ubuntuvm_password" {
   key_vault_id = data.azurerm_key_vault.ws.id
 }
 
-#if script Extensions
-  resource "azurerm_virtual_machine_extension" "RDP" {
+data "template_cloudinit_config" "config" {
+  gzip          = true
+  base64_encode = true
+  part {
+    content_type = "text/x-shellscript"
+    content = "${data.template_file.rdp_config.rendered}"
+    }
+}
+
+data "template_file" "rdp_config" {
+  template = "${file("${path.module}/rdp_config.sh")}"
+  vars = {
+    tre_id = "${var.tre_id}"
+  }
+}
+  resource "azurerm_virtual_machine_extension" "script" {
   name                 = local.vm_name
   virtual_machine_id   = azurerm_virtual_machine.ubuntuvm.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -91,7 +97,7 @@ resource "azurerm_key_vault_secret" "ubuntuvm_password" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install ubuntu-gnome-desktop -yq && sudo apt-get install xrdp -y && sudo adduser xrdp ssl-cert && sudo systemctl enable xrdp && sudo reboot" 
+        "commandToExecute": ""
     }
 SETTINGS
 }

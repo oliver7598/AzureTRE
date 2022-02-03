@@ -1,11 +1,21 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://github.com/microsoft/AzureTRE/templates/workspace_services/guacamole/user_resources/guacamole-azure-ubuntuvm-customscriptextension/template_schema.json",
+    "$id": "https://github.com/microsoft/AzureTRE/templates/workspace_services/guacamole/user_resources/guacamole-azure-ubuntuvm-cloud-init/template_schema.json",
     "type": "object",
     "title": "Ubuntu Virtual Machine",
     "description": "Ubuntu virtual machine.",
     "required": [
     ],
     "properties": {
+      "os_image": {
+        "$id": "#/properties/os_image",
+        "type": "string",
+        "title": "Ubuntu image",
+        "description": "Select Ubuntu image to use for VM",
+        "enum": [
+          "Ubuntu 18.04",
+          "Ubuntu 18.04 Data Science VM"
+        ]
+      }
     }
 }
