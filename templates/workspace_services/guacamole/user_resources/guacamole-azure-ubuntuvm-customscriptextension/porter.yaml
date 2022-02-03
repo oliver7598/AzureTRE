@@ -1,4 +1,4 @@
-name: tre-service-guacamole-ubuntuvm-cloud-init
+name: tre-service-guacamole-ubuntuvm-customscriptextension
 version: 0.1.13
 description: "An Azure TRE User Resource Template for Guacamole (Ubuntu)"
 registry: azuretre
