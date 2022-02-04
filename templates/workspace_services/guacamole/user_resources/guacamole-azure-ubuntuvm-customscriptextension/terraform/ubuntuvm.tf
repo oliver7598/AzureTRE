@@ -86,6 +86,7 @@ data "template_file" "rdp_config" {
   template = "${file("${path.module}/rdp_config.sh")}"
   vars = {
     tre_id = "${var.tre_id}"
+    image = "${var.image}"
   }
 }
   resource "azurerm_virtual_machine_extension" "script" {
