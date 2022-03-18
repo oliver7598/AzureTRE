@@ -18,7 +18,7 @@ resource "azurerm_storage_share" "shared_storage" {
   ]
 }
 
-resource "azurerm_storage_share" "shared_storage" {
+resource "azurerm_storage_share" "ingress" {
   name                 = "ingress"
   storage_account_name = azurerm_storage_account.stg.name
   quota                = 5
@@ -28,7 +28,7 @@ resource "azurerm_storage_share" "shared_storage" {
   ]
 }
 
-resource "azurerm_storage_share" "shared_storage" {
+resource "azurerm_storage_share" "egress" {
   name                 = "egress"
   storage_account_name = azurerm_storage_account.stg.name
   quota                = 5
