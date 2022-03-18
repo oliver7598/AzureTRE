@@ -18,6 +18,26 @@ resource "azurerm_storage_share" "shared_storage" {
   ]
 }
 
+resource "azurerm_storage_share" "shared_storage" {
+  name                 = "ingress"
+  storage_account_name = azurerm_storage_account.stg.name
+  quota                = 5
+
+  depends_on = [
+    azurerm_private_endpoint.stgfilepe
+  ]
+}
+
+resource "azurerm_storage_share" "shared_storage" {
+  name                 = "egress"
+  storage_account_name = azurerm_storage_account.stg.name
+  quota                = 5
+
+  depends_on = [
+    azurerm_private_endpoint.stgfilepe
+  ]
+}
+
 resource "azurerm_storage_account_network_rules" "stgrules" {
   resource_group_name  = azurerm_resource_group.ws.name
   storage_account_name = azurerm_storage_account.stg.name
