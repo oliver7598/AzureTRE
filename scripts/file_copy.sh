@@ -42,7 +42,7 @@ while [ "$1" != "" ]; do
     egress)
     ;;
     *)
-      echo "operation-type must be 'ingress' or 'egress', not $1"
+      echo "--operation-type must be 'ingress' or 'egress', not $1"
       exit 1
     esac
     operation_type=$1
@@ -57,7 +57,7 @@ while [ "$1" != "" ]; do
     ;;
   *)
     echo "Unexpected argument: '$1'"
-    usage
+    Help
     ;;
   esac
 
