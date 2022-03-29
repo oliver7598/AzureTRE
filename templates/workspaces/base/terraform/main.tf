@@ -19,8 +19,9 @@ provider "azurerm" {
 }
 
 provider "azuread" {
-  features {}
 }
+
+data "azuread_client_config" "current" {}
 
 resource "azurerm_resource_group" "ws" {
   location = var.location

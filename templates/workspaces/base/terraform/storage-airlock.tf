@@ -1,5 +1,3 @@
-data "azuread_client_config" "current" {}
-
 resource "azurerm_storage_account" "airlock_stg" {
   name                     = "${local.storage_name}airlock"
   resource_group_name      = azurerm_resource_group.ws.name
@@ -8,6 +6,16 @@ resource "azurerm_storage_account" "airlock_stg" {
   account_replication_type = "GRS"
 
   lifecycle { ignore_changes = [tags] }
+}
+
+resource "azurerm_role_assignment" "ws_pi_group_airlock" {
+  scope                = azurerm_storage_account.airlock_stg.id
+  role_definition_name = "Storage Account Contributor"
+  principal_id         = data.azuread_client_config.current.object_id
+
+    depends_on = [
+      azuread_group.workspace_pis
+  ]
 }
 
 resource "azurerm_storage_share" "airlock_ingress" {
@@ -29,22 +37,6 @@ resource "azurerm_storage_share" "airlock_egress" {
     azurerm_private_endpoint.airlock_stgfilepe
   ]
 }
-
-resource "azurerm_role_assignment" "ws_pi_group" {
-  scope                = azurerm_storage_account.airlock_stg.id
-  role_definition_name = "Storage Account Contributor"
-  principal_id         = data.azuread_client_config.current.object_id
-  depends_on = [
-    azurerm_subnet.services
-  ]
-}
-
-resource "azuread_group" "workspace_pis" {
-  display_name     = "TRE_ws${local.short_workspace_id}_PIs"
-  owners           = [data.azuread_client_config.current.object_id]
-  security_enabled = true
-}
-
 
 resource "azurerm_private_endpoint" "airlock_stgfilepe" {
   name                = "stgfilepe-${local.workspace_resource_name_suffix}-airlock"
