@@ -41,8 +41,7 @@ if [ ${shared_storage_access} -eq 1 ]; then
   mntRoot="/fileshares"
   credentialRoot="/etc/smbcredentials"
 
-  mntPath="$mntRoot/$fileShareName"
-  smbPath=$(echo $httpEndpoint | cut -c7-$(expr length $httpEndpoint))$fileShareName
+  rootSmbPath=$(echo $httpEndpoint | cut -c7-$(expr length $httpEndpoint))
   smbCredentialFile="$credentialRoot/$storageAccountName.cred"
 
   # Create required file paths
@@ -63,14 +62,18 @@ if [ ${shared_storage_access} -eq 1 ]; then
   sudo chmod 600 $smbCredentialFile
 
   # Configure autofs
-  sudo echo "$fileShareName -fstype=cifs,rw,dir_mode=0777,credentials=$smbCredentialFile :$smbPath" > /etc/auto.fileshares
+  sudo echo "$fileShareName -fstype=cifs,rw,dir_mode=0777,credentials=$smbCredentialFile :$rootSmbPat$fileShareNameh" > /etc/auto.fileshares
+  sudo echo "ingress -fstype=cifs,file_mode=0444,dir_mode=0777,credentials=$smbCredentialFile :${rootSmbPath}ingress" >> /etc/auto.fileshares
+  sudo echo "egress -fstype=cifs,file_mode=0222,dir_mode=0777,credentials=$smbCredentialFile :${rootSmbPath}egress" >> /etc/auto.fileshares
   sudo echo "$mntRoot /etc/auto.fileshares --timeout=60" > /etc/auto.master
 
   # Restart service to register changes
   sudo systemctl restart autofs
 
   # Autofs mounts when accessed for 60 seconds.  Folder created for constant visible mount
-  sudo ln -s $mntPath "/$fileShareName"
+  sudo ln -s "$mntRoot/$fileShareName" "/$fileShareName"
+  sudo ln -s "$mntPath/ingress" "/ingress"
+  sudo ln -s "$mntPath/egress" "/egress"
 fi
 
 ### Anaconda Config
